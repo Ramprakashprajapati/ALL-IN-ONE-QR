@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>All In One QR Code Generator Online Free | Custom QR Maker</title>
+<meta name="description" content="Free All In One QR Code Generator. Create Text, URL, Email, Phone, SMS and File QR Codes instantly. Customize color, add logo and download.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ramprakashprajapati.github.io/ALL-IN-ONE-QR-CODE-GENERATOR/">
+
+<!-- Google Analytics (Replace ID) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<style>
+body{
+background:linear-gradient(to right,#0f2027,#203a43,#2c5364);
+color:white;
+font-family:sans-serif;
+padding:20px;
+}
+.main-box{
+max-width:800px;
+margin:auto;
+background:#1c1c1e;
+padding:30px;
+border-radius:20px;
+box-shadow:0 0 25px rgba(0,255,195,.3);
+}
+h1{color:#00ffc3;text-align:center;margin-bottom:10px;}
+.logo-gif{display:block;margin:0 auto 15px auto;width:80px;}
+.btn-custom{background:#00ffc3;color:black;font-weight:bold;}
+#qrCode canvas{background:white;padding:10px;border-radius:15px;}
+.share-buttons a{margin:5px;}
+</style>
+</head>
+
+<body>
+
+<div class="main-box">
+
+<!-- GIF LOGO -->
+<img src="scnr.gif" alt="QR Scanner Animation" class="logo-gif">
+
+<h1>All In One QR Code Generator</h1>
+
+<select id="qrType" class="form-select mb-3" onchange="toggleInput()">
+<option value="text">Text</option>
+<option value="url">Website URL</option>
+<option value="phone">Phone</option>
+<option value="email">Email</option>
+<option value="sms">SMS</option>
+<option value="file">File</option>
+</select>
+
+<div id="textInput">
+<textarea id="qrData" class="form-control mb-3" rows="3" placeholder="Enter your content"></textarea>
+</div>
+
+<div id="fileInput" style="display:none;">
+<input type="file" id="fileUpload" class="form-control mb-3">
+</div>
+
+<label>Choose QR Color</label>
+<input type="color" id="qrColor" value="#000000" class="form-control form-control-color mb-3">
+
+<label>Add Logo Inside QR (optional)</label>
+<input type="file" id="logoUpload" accept="image/*" class="form-control mb-3">
+
+<button onclick="generateQR()" class="btn btn-custom w-100">Generate QR Code</button>
+
+<div class="text-center mt-4">
+<div id="qrCode"></div>
+
+<!-- DOWNLOAD BUTTON -->
+<a id="downloadBtn" class="btn btn-success mt-3" style="display:none;" download="qr-code.png">
+Download QR Code
+</a>
+
+<!-- SOCIAL SHARE -->
+<div id="shareSection" class="share-buttons mt-3" style="display:none;">
+<h5>Share on Social Media:</h5>
+<a id="whatsappShare" target="_blank" class="btn btn-success">WhatsApp</a>
+<a id="facebookShare" target="_blank" class="btn btn-primary">Facebook</a>
+<a id="linkedinShare" target="_blank" class="btn btn-info">LinkedIn</a>
+<a id="twitterShare" target="_blank" class="btn btn-dark">Twitter/X</a>
+<a id="instagramShare" target="_blank" class="btn btn-danger">Instagram</a>
+</div>
+</div>
+
+<hr class="mt-5">
+
+<!-- HOW IT WORKS -->
+<h2>How It Works</h2>
+<ol>
+<li>Select the QR Code type.</li>
+<li>Enter your content or upload file.</li>
+<li>Customize QR color and optionally add logo.</li>
+<li>Click Generate QR Code.</li>
+<li>Download or share instantly.</li>
+</ol>
+
+<h2>Why Use This Tool?</h2>
+<p>
+This free QR code generator allows you to create customizable QR codes for websites, text, contact details and files. 
+Works on all devices and requires no registration.
+</p>
+
+</div>
+
+<script>
+
+function toggleInput(){
+let type=document.getElementById("qrType").value;
+document.getElementById("textInput").style.display=(type==="file")?"none":"block";
+document.getElementById("fileInput").style.display=(type==="file")?"block":"none";
+}
+
+function generateQR(){
+let type=document.getElementById("qrType").value;
+let qrDiv=document.getElementById("qrCode");
+qrDiv.innerHTML="";
+let data="";
+
+if(type==="file"){
+let file=document.getElementById("fileUpload").files[0];
+if(!file){alert("Upload file");return;}
+let reader=new FileReader();
+reader.onload=function(e){
+drawQR(e.target.result);
+}
+reader.readAsDataURL(file);
+return;
+}else{
+data=document.getElementById("qrData").value.trim();
+if(!data){alert("Enter valid data");return;}
+if(type==="url" && !data.startsWith("http")) data="https://"+data;
+if(type==="phone") data="tel:"+data;
+if(type==="email") data="mailto:"+data;
+if(type==="sms") data="sms:"+data;
+drawQR(data);
+}
+}
+
+function drawQR(data){
+let color=document.getElementById("qrColor").value;
+
+QRCode.toCanvas(data,{
+width:250,
+color:{dark:color,light:"#ffffff"}
+},function(err,canvas){
+if(err) console.error(err);
+
+document.getElementById("qrCode").appendChild(canvas);
+
+let logoFile=document.getElementById("logoUpload").files[0];
+if(logoFile){
+let ctx=canvas.getContext("2d");
+let logo=new Image();
+logo.src=URL.createObjectURL(logoFile);
+logo.onload=function(){
+let size=60;
+ctx.drawImage(logo,(canvas.width-size)/2,(canvas.height-size)/2,size,size);
+}
+}
+
+let imageURL=canvas.toDataURL("image/png");
+
+let downloadBtn=document.getElementById("downloadBtn");
+downloadBtn.style.display="inline-block";
+downloadBtn.href=imageURL;
+
+document.getElementById("shareSection").style.display="block";
+
+let siteURL="https://ramprakashprajapati.github.io/ALL-IN-ONE-QR-CODE-GENERATOR/";
+
+document.getElementById("whatsappShare").href="https://api.whatsapp.com/send?text=Generate QR Code here: "+siteURL;
+document.getElementById("facebookShare").href="https://www.facebook.com/sharer/sharer.php?u="+siteURL;
+document.getElementById("linkedinShare").href="https://www.linkedin.com/sharing/share-offsite/?url="+siteURL;
+document.getElementById("twitterShare").href="https://twitter.com/intent/tweet?url="+siteURL;
+document.getElementById("instagramShare").href="https://www.instagram.com/";
+});
+}
+
+</script>
+
+</body>
+</html>
